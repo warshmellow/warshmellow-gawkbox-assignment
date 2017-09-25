@@ -10,6 +10,10 @@ type GetChannelResponse struct {
 	Views     int
 }
 
+type GetStreamResponse struct {
+	StreamingNow bool
+}
+
 func init() {
 	fmt.Println("Initializing Twitch API...")
 }
@@ -27,4 +31,8 @@ func GetChannel(id int) GetChannelResponse {
 		Views:     9001,
 	}
 	return r
+}
+
+func GetStream(id int) GetStreamResponse {
+	return GetStreamResponse{StreamingNow: true}
 }

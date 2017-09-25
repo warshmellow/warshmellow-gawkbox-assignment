@@ -7,16 +7,31 @@ import (
 )
 
 func TestGetChannelsHandler(t *testing.T) {
-	// Create a request to pass to our handler. We don't have any query parameters for now, so we'll
-	// pass 'nil' as the third parameter.
 	req := httptest.NewRequest("GET", "/channels?id=1", nil)
 
-	// We create a ResponseRecorder (which satisfies http.ResponseWriter) to record the response.
 	rr := httptest.NewRecorder()
 	handler := http.HandlerFunc(GetChannelHandler)
 
-	// Our handlers satisfy http.Handler, so we can call their ServeHTTP method
-	// directly and pass in our Request and ResponseRecorder.
+	handler.ServeHTTP(rr, req)
+
+	// Check the status code is what we expect.
+	if status := rr.Code; status != http.StatusOK {
+		t.Errorf("handler returned wrong status code: got %v want %v",
+			status, http.StatusOK)
+	}
+
+	// Check body is non-empty
+	if len(rr.Body.String()) == 0 {
+		t.Errorf("body should be nonempty")
+	}
+}
+
+func TestGetStreamHandler(t *testing.T) {
+	req := httptest.NewRequest("GET", "/streams?id=1", nil)
+
+	rr := httptest.NewRecorder()
+	handler := http.HandlerFunc(GetStreamHandler)
+
 	handler.ServeHTTP(rr, req)
 
 	// Check the status code is what we expect.
