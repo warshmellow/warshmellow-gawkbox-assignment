@@ -53,3 +53,21 @@ func GetStreamHandler(w http.ResponseWriter, r *http.Request) {
 
 	fmt.Fprintf(w, respStr)
 }
+
+func GetUserHandler(w http.ResponseWriter, r *http.Request) {
+	fmt.Printf("Recieved the following request: %s %s \n", r.Method, r.URL)
+
+	v := r.URL.Query()
+	id, err := strconv.Atoi(v.Get("id"))
+	if err != nil {
+		http.Error(w, "Cannot parse id", http.StatusBadRequest)
+		return
+	}
+
+	resp := twitch.GetUser(id)
+
+	respByte, _ := json.Marshal(resp)
+	respStr := string(respByte)
+
+	fmt.Fprintf(w, respStr)
+}

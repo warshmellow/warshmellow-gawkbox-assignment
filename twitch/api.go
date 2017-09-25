@@ -11,7 +11,15 @@ type GetChannelResponse struct {
 }
 
 type GetStreamResponse struct {
+	ID           int
 	StreamingNow bool
+}
+
+type GetUserResponse struct {
+	ID          int
+	Bio         string
+	CreatedAt   string
+	DisplayName string
 }
 
 func init() {
@@ -24,7 +32,7 @@ func DoSomething() {
 
 func GetChannel(id int) GetChannelResponse {
 	r := GetChannelResponse{
-		ID:        1,
+		ID:        id,
 		Followers: 333,
 		Game:      "Dark Souls 3",
 		Language:  "en",
@@ -34,5 +42,14 @@ func GetChannel(id int) GetChannelResponse {
 }
 
 func GetStream(id int) GetStreamResponse {
-	return GetStreamResponse{StreamingNow: true}
+	return GetStreamResponse{ID: id, StreamingNow: true}
+}
+
+func GetUser(id int) GetUserResponse {
+	return GetUserResponse{
+		ID:          id,
+		Bio:         "Just a gamer playing games and chatting. :)",
+		CreatedAt:   "2013-06-03T19:12:02Z",
+		DisplayName: "dallas",
+	}
 }
