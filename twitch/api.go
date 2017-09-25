@@ -3,23 +3,23 @@ package twitch
 import "fmt"
 
 type GetChannelResponse struct {
-	ID        int
-	Followers int
-	Game      string
-	Language  string
-	Views     int
+	ID        int    `json:"_id"`
+	Followers int    `json:"followers"`
+	Game      string `json:"game"`
+	Language  string `json:"language"`
+	Views     int    `json:"views"`
 }
 
 type GetStreamResponse struct {
-	ID           int
-	StreamingNow bool
+	ID           int  `json:"_id"`
+	StreamingNow bool `json:"streaming_now"`
 }
 
 type GetUserResponse struct {
-	ID          int
-	Bio         string
-	CreatedAt   string
-	DisplayName string
+	ID          int    `json:"_id"`
+	Bio         string `json:"bio"`
+	CreatedAt   string `json:"created_at"`
+	DisplayName string `json:"display_name"`
 }
 
 func init() {
