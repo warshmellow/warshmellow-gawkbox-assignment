@@ -1,9 +1,11 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"github.com/warshmellow/warshmellow-gawkbox-assignment/twitch"
 	"net/http"
+	"strconv"
 )
 
 func main() {
@@ -16,15 +18,20 @@ func main() {
 	http.ListenAndServe(":8080", nil)
 }
 
-// myHandlerFunc - A sample handler function for the route /sample_route for your HTTP server
 func GetChannelHandler(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("Recieved the following request:", r.Body)
+	fmt.Printf("Recieved the following request: %s %s \n", r.Method, r.URL)
 
-	twitch.DoSomething()
+	v := r.URL.Query()
+	id, err := strconv.Atoi(v.Get("id"))
+	if err != nil {
+		http.Error(w, "Cannot parse id", http.StatusBadRequest)
+		return
+	}
 
-	// YOUR ROUTES LOGIC GOES HERE
-	//
-	// Feel free to structure your routing however you see fit, this is just an example to get you started.
+	resp := twitch.GetChannel(id)
 
-	fmt.Fprintf(w, "hello")
+	respByte, _ := json.Marshal(resp)
+	respStr := string(respByte)
+
+	fmt.Fprintf(w, respStr)
 }

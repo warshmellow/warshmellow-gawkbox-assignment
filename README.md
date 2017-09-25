@@ -46,10 +46,6 @@ TwitchGetChannelResponse
 TwitchGetStreamResponse
 TwitchGetUserResponse
 
-GetChannelRequest
-GetStreamRequest
-GetUserRequest
-
 GetChannelResponse
 GetStreamResponse
 GetUserResponse
