@@ -11,8 +11,10 @@ import (
 func main() {
 	fmt.Println("Booting the server...")
 
-	// Configure a sample route
+	// Configure routes
 	http.HandleFunc("/channels", GetChannelHandler)
+	http.HandleFunc("/streams", GetStreamHandler)
+	http.HandleFunc("/users", GetUserHandler)
 
 	// Run your server
 	http.ListenAndServe(":8080", nil)
