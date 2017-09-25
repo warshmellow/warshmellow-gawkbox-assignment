@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"gawkbox-assignment/twitch"
+	"github.com/warshmellow/warshmellow-gawkbox-assignment/twitch"
 	"net/http"
 )
 

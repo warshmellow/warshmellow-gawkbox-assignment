@@ -29,8 +29,47 @@ Question: useful to put channel and user info in same endpoint? benefit is you g
 is that Twitch itself separates into two diff endpoints. I'll have my twitch api conform more closely to theirs
 for now.
 
+First, write tests for http handlers and make pass w dummy input.
+Then write twitch module.
+Is there a testing lib for golang? 
+Create handler and call ServeHTTP on it with httptest.NewRecorder()
+Check response recorder for correct attributes, i.e., status code, etc.
+What are the status codes from Twitch? Use those (or just 200/404)
 
+What are the Request and Response structs?
 
+TwitchGetChannelRequest
+TwitchGetStreamRequest
+TwitchGetUserRequest
+
+TwitchGetChannelResponse
+TwitchGetStreamResponse
+TwitchGetUserResponse
+
+GetChannelRequest
+GetStreamRequest
+GetUserRequest
+
+GetChannelResponse
+GetStreamResponse
+GetUserResponse
+
+The twitch module will talk to Twitch API, and Accept Get*Request and Write 
+Get*Response.
+
+Really, twitch lib is a service, and the handlers should really offload work to 
+service.
+
+So question: wiring first? or logic first?
+wiring is easier
+
+then logic
+
+3 packages:
+twitch (twitch lib)
+handler (handlers)  (imports twitch) (where should structs go? twitch for now, but
+can move to a dummy structs package later)
+main (starts server)
 
 GET https://api.twitch.tv/kraken/user
 Response:
