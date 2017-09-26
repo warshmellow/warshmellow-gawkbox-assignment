@@ -22,12 +22,28 @@ type GetUserResponse struct {
 	DisplayName string `json:"display_name"`
 }
 
-func init() {
-	fmt.Println("Initializing Twitch API...")
+type ExtAPIGetChannelResponse struct {
+	ID        int    `json:"_id"`
+	Followers int    `json:"followers"`
+	Game      string `json:"game"`
+	Language  string `json:"language"`
+	Views     int    `json:"views"`
 }
 
-func DoSomething() {
-	fmt.Println("Something.")
+type ExtAPIGetStreamResponse struct {
+	Stream interface{} `json:"stream"`
+}
+
+type ExtAPIGetUserResponse struct {
+	ID          int    `json:"_id"`
+	Bio         string `json:"bio"`
+	CreatedAt   string `json:"created_at"`
+	DisplayName string `json:"display_name"`
+}
+
+func init() {
+	fmt.Println("Initializing Twitch API...")
+	// Load Client ID
 }
 
 func GetChannel(id int) GetChannelResponse {
