@@ -50,12 +50,13 @@ type ExtAPIGetUserResponse struct {
 
 type Twitchy interface {
 	GetChannel(id int) (GetChannelResponse, error)
-	GetStream(id int) GetStreamResponse
+	GetStream(id int) (GetStreamResponse, error)
 	GetUser(id int) (GetUserResponse, error)
 }
 
 type TwitchAPI struct {
 	ClientID      string
+	GetStreamURI  string
 	GetChannelURI string
 	GetUserIdURI  string
 }
@@ -85,8 +86,32 @@ func (t TwitchAPI) GetChannel(id int) (GetChannelResponse, error) {
 	}
 }
 
-func (t TwitchAPI) GetStream(id int) GetStreamResponse {
-	return GetStreamResponse{ID: id, StreamingNow: true}
+func (t TwitchAPI) GetStream(id int) (GetStreamResponse, error) {
+	client := &http.Client{}
+
+	result := GetStreamResponse{ID: id}
+	extResp := ExtAPIGetStreamResponse{}
+
+	uri := fmt.Sprintf("%s%v?client_id=%s", t.GetStreamURI, id, t.ClientID)
+	fmt.Printf("Sent request to %s", uri)
+
+	req, _ := http.NewRequest("GET", uri, nil)
+	req.Header.Add("Accept", `application/vnd.twitchtv.v5+json"`)
+
+	resp, _ := client.Do(req)
+
+	if resp.StatusCode == http.StatusOK {
+
+		defer resp.Body.Close()
+		body, _ := ioutil.ReadAll(resp.Body)
+		json.Unmarshal(body, &extResp)
+
+		result.StreamingNow = extResp.Stream != nil
+
+		return result, nil
+	} else {
+		return result, errors.New(strconv.Itoa(resp.StatusCode))
+	}
 }
 
 func (t TwitchAPI) GetUser(id int) (GetUserResponse, error) {

@@ -21,8 +21,8 @@ func (t TestTwitchy) GetChannel(id int) (twitch.GetChannelResponse, error) {
 	}, nil
 }
 
-func (t TestTwitchy) GetStream(id int) twitch.GetStreamResponse {
-	return twitch.GetStreamResponse{ID: id, StreamingNow: true}
+func (t TestTwitchy) GetStream(id int) (twitch.GetStreamResponse, error) {
+	return twitch.GetStreamResponse{ID: id, StreamingNow: true}, nil
 }
 
 func (t TestTwitchy) GetUser(id int) (twitch.GetUserResponse, error) {

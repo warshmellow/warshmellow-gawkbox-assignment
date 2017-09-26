@@ -14,6 +14,7 @@ func main() {
 	t := twitch.TwitchAPI{
 		ClientID:      "l3p9c840mspj37hw3845gnfu0pg2ar",
 		GetChannelURI: "https://api.twitch.tv/kraken/channels/",
+		GetStreamURI:  "https://api.twitch.tv/kraken/streams/",
 		GetUserIdURI:  "https://api.twitch.tv/kraken/users/",
 	}
 
@@ -62,7 +63,12 @@ func handleGetStream(t twitch.Twitchy) http.HandlerFunc {
 			return
 		}
 
-		resp := t.GetStream(id)
+		resp, err := t.GetStream(id)
+		if err != nil {
+			errStatusCode, _ := strconv.Atoi(err.Error())
+			http.Error(w, err.Error(), errStatusCode)
+			return
+		}
 
 		respByte, _ := json.Marshal(resp)
 		respStr := string(respByte)
