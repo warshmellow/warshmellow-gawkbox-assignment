@@ -135,3 +135,13 @@ Sample Failed Request
     
 Response will be only the error Status Code from Twitch API. (e.g. `404`)
 
+## Docker
+Unfortunately I don't have access to a development machine allowing Docker. 
+My development machine uses a version of Windows that doesn't allow the virtualization
+needed by Docker.
+
+Further direction with Docker:
+1. Refactor the code to consume Twitch API config via environment variables
+1. Build the executable
+1. Put config as env. variables in Dockerfile
+1. Ship docker image with the executable
