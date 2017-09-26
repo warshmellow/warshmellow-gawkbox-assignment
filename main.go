@@ -13,8 +13,9 @@ import (
 func main() {
 	fmt.Println("Booting the server...")
 
-	// Read config.json from directory
-	filename := "twitch_config.json"
+	// Read config.json from path and initialize Twitch API
+	fmt.Printf("Reading command line argument (path of twitch api config) %v\n", os.Args)
+	filename := os.Args[1]
 	dat, err := ioutil.ReadFile(filename)
 	if err != nil {
 		fmt.Printf("Can't read Twitch API config %v\n", filename)
