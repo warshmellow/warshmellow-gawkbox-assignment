@@ -39,6 +39,14 @@ type Twitchy interface {
 	GetUser(id int) (GetUserResponse, error)
 }
 
+type TwitchConfig struct {
+	ClientID      string `json:"client_id"`
+	AcceptHeader  string `json:"accept_header"`
+	GetStreamURI  string `json:"get_stream_uri"`
+	GetChannelURI string `json:"get_channel_uri"`
+	GetUserURI    string `json:"get_user_uri"`
+}
+
 type TwitchAPI struct {
 	ClientID      string
 	AcceptHeader  string

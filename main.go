@@ -4,19 +4,33 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/warshmellow/warshmellow-gawkbox-assignment/twitch"
+	"io/ioutil"
 	"net/http"
+	"os"
 	"strconv"
 )
 
 func main() {
 	fmt.Println("Booting the server...")
 
+	// Read config.json from directory
+	filename := "twitch_config.json"
+	dat, err := ioutil.ReadFile(filename)
+	if err != nil {
+		fmt.Printf("Can't read Twitch API config %v\n", filename)
+		os.Exit(1)
+	}
+
+	twitchConfig := twitch.TwitchConfig{}
+	json.Unmarshal(dat, &twitchConfig)
+	fmt.Printf("Loaded Twitch Config: %v\n", twitchConfig)
+
 	t := twitch.TwitchAPI{
-		ClientID:      "uo6dggojyb8d6soh92zknwmi5ej1q2",
-		AcceptHeader:  `application/vnd.twitchtv.v5+json`,
-		GetChannelURI: "https://api.twitch.tv/kraken/channels/",
-		GetStreamURI:  "https://api.twitch.tv/kraken/streams/",
-		GetUserURI:    "https://api.twitch.tv/kraken/users/",
+		ClientID:      twitchConfig.ClientID,
+		AcceptHeader:  twitchConfig.AcceptHeader,
+		GetChannelURI: twitchConfig.GetChannelURI,
+		GetStreamURI:  twitchConfig.GetStreamURI,
+		GetUserURI:    twitchConfig.GetUserURI,
 	}
 
 	// Configure routes

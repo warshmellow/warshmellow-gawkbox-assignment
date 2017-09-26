@@ -1,0 +1,7 @@
+{
+  "client_id": "uo6dggojyb8d6soh92zknwmi5ej1q2",
+  "accept_header": "application/vnd.twitchtv.v5+json",
+  "get_channel_uri": "https://api.twitch.tv/kraken/channels/",
+  "get_stream_uri": "https://api.twitch.tv/kraken/streams/",
+  "get_user_uri": "https://api.twitch.tv/kraken/users/"
+}
