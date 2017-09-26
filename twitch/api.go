@@ -49,25 +49,40 @@ type ExtAPIGetUserResponse struct {
 }
 
 type Twitchy interface {
-	GetChannel(id int) GetChannelResponse
+	GetChannel(id int) (GetChannelResponse, error)
 	GetStream(id int) GetStreamResponse
 	GetUser(id int) (GetUserResponse, error)
 }
 
 type TwitchAPI struct {
-	ClientID     string
-	GetUserIdURI string
+	ClientID      string
+	GetChannelURI string
+	GetUserIdURI  string
 }
 
-func (t TwitchAPI) GetChannel(id int) GetChannelResponse {
-	r := GetChannelResponse{
-		ID:        id,
-		Followers: 333,
-		Game:      "Dark Souls 3",
-		Language:  "en",
-		Views:     9001,
+func (t TwitchAPI) GetChannel(id int) (GetChannelResponse, error) {
+	client := &http.Client{}
+
+	result := GetChannelResponse{ID: id}
+
+	uri := fmt.Sprintf("%s%v?client_id=%s", t.GetChannelURI, id, t.ClientID)
+	fmt.Printf("Sent request to %s", uri)
+
+	req, _ := http.NewRequest("GET", uri, nil)
+	req.Header.Add("Accept", `application/vnd.twitchtv.v5+json"`)
+
+	resp, _ := client.Do(req)
+
+	if resp.StatusCode == http.StatusOK {
+
+		defer resp.Body.Close()
+		body, _ := ioutil.ReadAll(resp.Body)
+		json.Unmarshal(body, &result)
+
+		return result, nil
+	} else {
+		return result, errors.New(strconv.Itoa(resp.StatusCode))
 	}
-	return r
 }
 
 func (t TwitchAPI) GetStream(id int) GetStreamResponse {

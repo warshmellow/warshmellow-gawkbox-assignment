@@ -11,14 +11,14 @@ var mux *http.ServeMux
 
 type TestTwitchy struct{}
 
-func (t TestTwitchy) GetChannel(id int) twitch.GetChannelResponse {
+func (t TestTwitchy) GetChannel(id int) (twitch.GetChannelResponse, error) {
 	return twitch.GetChannelResponse{
 		ID:        id,
 		Followers: 333,
 		Game:      "Dark Souls 3",
 		Language:  "en",
 		Views:     9001,
-	}
+	}, nil
 }
 
 func (t TestTwitchy) GetStream(id int) twitch.GetStreamResponse {
