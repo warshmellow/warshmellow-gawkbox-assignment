@@ -41,12 +41,22 @@ type ExtAPIGetUserResponse struct {
 	DisplayName string `json:"display_name"`
 }
 
+type Twitchy interface {
+	GetChannel(id int) GetChannelResponse
+	GetStream(id int) GetStreamResponse
+	GetUser(id int) GetUserResponse
+}
+
+type TwitchAPI struct {
+	ClientID int
+}
+
 func init() {
 	fmt.Println("Initializing Twitch API...")
 	// Load Client ID
 }
 
-func GetChannel(id int) GetChannelResponse {
+func (t TwitchAPI) GetChannel(id int) GetChannelResponse {
 	r := GetChannelResponse{
 		ID:        id,
 		Followers: 333,
@@ -57,11 +67,11 @@ func GetChannel(id int) GetChannelResponse {
 	return r
 }
 
-func GetStream(id int) GetStreamResponse {
+func (t TwitchAPI) GetStream(id int) GetStreamResponse {
 	return GetStreamResponse{ID: id, StreamingNow: true}
 }
 
-func GetUser(id int) GetUserResponse {
+func (t TwitchAPI) GetUser(id int) GetUserResponse {
 	return GetUserResponse{
 		ID:          id,
 		Bio:         "Just a gamer playing games and chatting. :)",

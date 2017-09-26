@@ -1,6 +1,7 @@
 package main
 
 import (
+	"github.com/warshmellow/warshmellow-gawkbox-assignment/twitch"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -10,7 +11,7 @@ func TestGetChannelsHandler(t *testing.T) {
 	req := httptest.NewRequest("GET", "/channels?id=1", nil)
 
 	rr := httptest.NewRecorder()
-	handler := http.HandlerFunc(GetChannelHandler)
+	handler := http.HandlerFunc(handleGetChannel(twitch.TwitchAPI{}))
 
 	handler.ServeHTTP(rr, req)
 
@@ -30,7 +31,7 @@ func TestGetStreamHandler(t *testing.T) {
 	req := httptest.NewRequest("GET", "/streams?id=1", nil)
 
 	rr := httptest.NewRecorder()
-	handler := http.HandlerFunc(GetStreamHandler)
+	handler := http.HandlerFunc(handleGetStream(twitch.TwitchAPI{}))
 
 	handler.ServeHTTP(rr, req)
 
@@ -50,7 +51,7 @@ func TestGetUserHandler(t *testing.T) {
 	req := httptest.NewRequest("GET", "/users?id=1", nil)
 
 	rr := httptest.NewRecorder()
-	handler := http.HandlerFunc(GetUserHandler)
+	handler := http.HandlerFunc(handleGetUser(twitch.TwitchAPI{}))
 
 	handler.ServeHTTP(rr, req)
 
