@@ -11,7 +11,10 @@ import (
 func main() {
 	fmt.Println("Booting the server...")
 
-	t := twitch.TwitchAPI{}
+	t := twitch.TwitchAPI{
+		ClientID:     "l3p9c840mspj37hw3845gnfu0pg2ar",
+		GetUserIdURI: "https://api.twitch.tv/kraken/users/",
+	}
 
 	// Configure routes
 	http.HandleFunc("/channels", handleGetChannel(t))
@@ -72,7 +75,12 @@ func handleGetUser(t twitch.Twitchy) http.HandlerFunc {
 			return
 		}
 
-		resp := t.GetUser(id)
+		resp, err := t.GetUser(id)
+		if err != nil {
+			errStatusCode, _ := strconv.Atoi(err.Error())
+			http.Error(w, err.Error(), errStatusCode)
+			return
+		}
 
 		respByte, _ := json.Marshal(resp)
 		respStr := string(respByte)

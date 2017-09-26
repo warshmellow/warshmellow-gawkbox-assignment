@@ -25,13 +25,13 @@ func (t TestTwitchy) GetStream(id int) twitch.GetStreamResponse {
 	return twitch.GetStreamResponse{ID: id, StreamingNow: true}
 }
 
-func (t TestTwitchy) GetUser(id int) twitch.GetUserResponse {
+func (t TestTwitchy) GetUser(id int) (twitch.GetUserResponse, error) {
 	return twitch.GetUserResponse{
 		ID:          id,
 		Bio:         "Just a gamer playing games and chatting. :)",
 		CreatedAt:   "2013-06-03T19:12:02Z",
 		DisplayName: "dallas",
-	}
+	}, nil
 }
 
 func init() {
