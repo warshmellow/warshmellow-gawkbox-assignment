@@ -1,7 +1,5 @@
 package twitch
 
-import "fmt"
-
 type GetChannelResponse struct {
 	ID        int    `json:"_id"`
 	Followers int    `json:"followers"`
@@ -49,11 +47,6 @@ type Twitchy interface {
 
 type TwitchAPI struct {
 	ClientID int
-}
-
-func init() {
-	fmt.Println("Initializing Twitch API...")
-	// Load Client ID
 }
 
 func (t TwitchAPI) GetChannel(id int) GetChannelResponse {
