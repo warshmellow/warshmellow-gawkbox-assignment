@@ -1,146 +1,137 @@
 ## Remote Assignment V3
 
+A REST API to get the following from Twitch v5 API:
 
-Your instructions go here. 
+Given a streamer’s username, get:
+1. user’s channel’s # of views
+1. user’s channel’s # of followers
+1. user’s channel’s game
+1. user’s channel’s language
+1. if the user is currently streaming
+1. user’s display name
+1. user’s bio
+1. user’s account creation date
 
-	In order to accomplish the aforementioned mission we need you to build an HTTP Server
-as an API with various endpoints where the request contains the streamer’s username and
-returns an HTTP response. We would like to access this API to receive the following information:
+We expose the following API:
 
+    GET /channels?id=
+    GET /streams?id=
+    GET /users?id=
 
-Older Twitch v5 API
-request contains the streamer’s username (NB: * user ID — Identifies a user, channel,
- or channel feed, depending on the endpoint.)
-● user’s channel’s # of views (GET Channel)
-● user’s channel’s # of followers (GET Channel)
-● user’s channel’s game (GET Channel)
-● user’s channel’s language (GET Channel)
-● if the user is currently streaming (GET Live Stream by User)
-● user’s display name (GET user)
-● user’s bio (GET user)
-● user’s account creation date (GET user)
+`channels` will get you channel info, `streams` if the user is streaming, `users` for user info.
 
-Consider the following REST API:
-GET channels/:id
-GET streams/:id
-GET users/:id
+## Getting started
+### Config
+Config for the Twitch API is stored in a JSON file (e.g. `twitch_config.json`) of the following form:
 
-Question: useful to put channel and user info in same endpoint? benefit is you get info all at once; downside
-is that Twitch itself separates into two diff endpoints. I'll have my twitch api conform more closely to theirs
-for now.
+    {
+      "client_id": "uo6dggojyb8d6soh92zknwmi5ej1q2",
+      "accept_header": "application/vnd.twitchtv.v5+json",
+      "get_channel_uri": "https://api.twitch.tv/kraken/channels/",
+      "get_stream_uri": "https://api.twitch.tv/kraken/streams/",
+      "get_user_uri": "https://api.twitch.tv/kraken/users/"
+    }
 
-First, write tests for http handlers and make pass w dummy input.
-Then write twitch module.
-Is there a testing lib for golang? 
-Create handler and call ServeHTTP on it with httptest.NewRecorder()
-Check response recorder for correct attributes, i.e., status code, etc.
-What are the status codes from Twitch? Use those (or just 200/404)
+A sample config is included as `twitch_config.json`.
+### Build
+Go get the repo with 
+    
+    go get -u github.com/warshmellow/warshmellow-gawkbox-assignment
+    
+Build with 
 
-What are the Request and Response structs?
+    go build
+    
+    
+### Start
+Execute from the command line with the first argument being the path to the config file for Twitch API. This will 
+start an HTTP Server listening on 8080.
 
-TwitchGetChannelRequest
-TwitchGetStreamRequest
-TwitchGetUserRequest
+    ./[executable] twitch_config.json
+    
+### Try
+Try the following request
 
-TwitchGetChannelResponse
-TwitchGetStreamResponse
-TwitchGetUserResponse
+    GET http://localhost:8080/channels?id=98955702
 
-GetChannelResponse
-GetStreamResponse
-GetUserResponse
+This will get you channel info for user 98955702, aka "theDemodcracy".
 
-The twitch module will talk to Twitch API, and Accept Get*Request and Write 
-Get*Response.
+## API
 
-Really, twitch lib is a service, and the handlers should really offload work to 
-service.
+Each endpoint uses an integer `id` query parameter. If you can't parse it, you'll receive a `400 Bad Request`.
 
-So question: wiring first? or logic first?
-wiring is easier
+#### Get Channel
 
-then logic
+    GET /channels?id=
 
-3 packages:
-twitch (twitch lib)
-handler (handlers)  (imports twitch) (where should structs go? twitch for now, but
-can move to a dummy structs package later)
-main (starts server)
+Given user id, get:
+1. user’s channel’s # of views
+1. user’s channel’s # of followers
+1. user’s channel’s game
+1. user’s channel’s language
+    
+Sample Successful Request
 
-GET https://api.twitch.tv/kraken/user
-Response:
-{
-    "_id": 44322889,
-    "bio": "Just a gamer playing games and chatting. :)",
-    "created_at": "2013-06-03T19:12:02Z",
-    "display_name": "dallas",
-   ...
-}
+    GET http://localhost:8080/channels?id=98955702
 
-GET https://api.twitch.tv/kraken/streams/<channel ID>
-{
-   "stream":null
-}
+Sample Response
+    
+    {"_id":98955702,"followers":16246,"game":"Destiny 2","language":"en","views":197480}
+    
+Sample Failed Request
 
-OR 
+    GET http://localhost:8080/channels?id=1135165481
+    
+Response will be only the error Status Code from Twitch API. (e.g. `404`)
 
-{
-   "stream": {
-      "_id": 23932774784,
-      "game": "BATMAN - The Telltale Series",
-      "viewers": 7254,
-      "video_height": 720,
-      "average_fps": 60,
-      "delay": 0,
-      "created_at": "2016-12-14T22:49:56Z",
-      "is_playlist": false,
-      "preview": {
-         "small": "https://static-cdn.jtvnw.net/previews-ttv/live_user_dansgaming-80x45.jpg",
-         "medium": "https://static-cdn.jtvnw.net/previews-ttv/live_user_dansgaming-320x180.jpg",
-         "large": "https://static-cdn.jtvnw.net/previews-ttv/live_user_dansgaming-640x360.jpg",
-         "template": "https://static-cdn.jtvnw.net/previews-ttv/live_user_dansgaming-{width}x{height}.jpg"
-      },
-      "channel": {
-         "mature": false,
-         "status": "Dan is Batman? - Telltale's Batman",
-         "broadcaster_language": "en",
-         "display_name": "DansGaming",
-         "game": "BATMAN - The Telltale Series",
-         "language": "en",
-         "_id": 7236692,
-         "name": "dansgaming",
-         "created_at": "2009-07-15T03:02:41Z",
-         "updated_at": "2016-12-15T01:33:58Z",
-         "partner": true,
-         "logo": "https://static-cdn.jtvnw.net/jtv_user_pictures/dansgaming-profile_image-76e4a4ab9388bc9c-300x300.png",
-         "video_banner": "https://static-cdn.jtvnw.net/jtv_user_pictures/dansgaming-channel_offline_image-d3551503c24c08ad-1920x1080.png",
-         "profile_banner": "https://static-cdn.jtvnw.net/jtv_user_pictures/dansgaming-profile_banner-4c2b8ece8cd010b4-480.jpeg",
-         "profile_banner_background_color": null,
-         "url": "https://www.twitch.tv/dansgaming",
-         "views": 63906830,
-         "followers": 538598
-      }
-   }
-}
+#### Get Stream
 
-GET https://api.twitch.tv/kraken/channels/<channel ID>
-{
-    "_id": 44322889,
-    "broadcaster_language": "en",
-    "created_at": "2013-06-03T19:12:02Z",
-    "display_name": "dallas",
-    "followers": 40,
-    "game": "Final Fantasy XV",
-    "language": "en",
-    "logo": "https://static-cdn.jtvnw.net/jtv_user_pictures/dallas-profile_image-1a2c906ee2c35f12-300x300.png",
-    "mature": true,
-    "name": "dallas",
-    "partner": false,
-    "profile_banner": null,
-    "profile_banner_background_color": null,
-    "status": "The Finalest of Fantasies",
-    "updated_at": "2016-12-06T22:02:05Z",
-    "url": "https://www.twitch.tv/dallas",
-    "video_banner": null,
-    "views": 232
-}
+    GET /streams?id=
+
+Given user id, get if the user is currently streaming. Note that if the user does not exist, you'll get
+`streaming_now = false` and a `200`. This is consistent with Twitch API's `Get Streams` Endpoint.
+
+Sample Successful Request
+
+    GET http://localhost:8080/streams?id=98955702
+
+Sample Response
+    
+    {"_id":98955702,"streaming_now":true}
+    
+Sample Failed Request
+
+    GET http://localhost:8080/channels?id=1135165481
+    
+Sample Response
+    
+    {"_id":1135165481,"streaming_now":false}
+    
+#### Get User
+
+    GET /users?id=
+
+Given user id, get:
+1. user’s display name
+1. user’s bio
+1. user’s account creation date
+    
+Sample Successful Request
+
+    GET http://localhost:8080/users?id=98955702
+
+Sample Response
+    
+    {
+    "_id":98955702,
+    "bio":"Variety speedrunner tries to live through memes to get all the PBs.",
+    "created_at":"2015-08-11T21:36:31.606157Z",
+    "display_name":"theDeModcracy"
+    }
+    
+Sample Failed Request
+
+    GET http://localhost:8080/users?id=1135165481
+    
+Response will be only the error Status Code from Twitch API. (e.g. `404`)
+
