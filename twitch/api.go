@@ -9,6 +9,9 @@ import (
 	"strconv"
 )
 
+/*
+Get*Response structs are data containers to send back to consumer
+*/
 type GetChannelResponse struct {
 	ID        int    `json:"_id"`
 	Followers int    `json:"followers"`
@@ -29,16 +32,25 @@ type GetUserResponse struct {
 	DisplayName string `json:"display_name"`
 }
 
+/*
+Twitch API specific response from Get Streams endpoint
+*/
 type ExtAPIGetStreamResponse struct {
 	Stream interface{} `json:"stream"`
 }
 
+/*
+Consumers will create a struct supporting this interface, which allows for mocking in tests
+*/
 type Twitchy interface {
 	GetChannel(id int) (GetChannelResponse, error)
 	GetStream(id int) (GetStreamResponse, error)
 	GetUser(id int) (GetUserResponse, error)
 }
 
+/*
+Twitch API config
+*/
 type TwitchConfig struct {
 	ClientID      string `json:"client_id"`
 	AcceptHeader  string `json:"accept_header"`
@@ -47,6 +59,9 @@ type TwitchConfig struct {
 	GetUserURI    string `json:"get_user_uri"`
 }
 
+/*
+Supports the Twitchy interface and will talk to Twitch v5 API
+*/
 type TwitchAPI struct {
 	ClientID      string
 	AcceptHeader  string
@@ -55,6 +70,9 @@ type TwitchAPI struct {
 	GetUserURI    string
 }
 
+/*
+Creates a Request that contains the Client ID and Accept Header for Twitch
+*/
 func (t TwitchAPI) NewRequest(method string, uri string, id int) (*http.Request, error) {
 	fullUri := fmt.Sprintf("%s%v?client_id=%s", uri, id, t.ClientID)
 
@@ -66,6 +84,9 @@ func (t TwitchAPI) NewRequest(method string, uri string, id int) (*http.Request,
 	return req, nil
 }
 
+/*
+Get* take user id and call Twitch API and get data, following usual error handling
+*/
 func (t TwitchAPI) GetChannel(id int) (GetChannelResponse, error) {
 	client := &http.Client{}
 
