@@ -12,7 +12,7 @@ func main() {
 	fmt.Println("Booting the server...")
 
 	t := twitch.TwitchAPI{
-		ClientID:      "l3p9c840mspj37hw3845gnfu0pg2ar",
+		ClientID:      "uo6dggojyb8d6soh92zknwmi5ej1q2",
 		AcceptHeader:  `application/vnd.twitchtv.v5+json`,
 		GetChannelURI: "https://api.twitch.tv/kraken/channels/",
 		GetStreamURI:  "https://api.twitch.tv/kraken/streams/",
