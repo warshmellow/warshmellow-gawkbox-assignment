@@ -29,23 +29,8 @@ type GetUserResponse struct {
 	DisplayName string `json:"display_name"`
 }
 
-type ExtAPIGetChannelResponse struct {
-	ID        int    `json:"_id"`
-	Followers int    `json:"followers"`
-	Game      string `json:"game"`
-	Language  string `json:"language"`
-	Views     int    `json:"views"`
-}
-
 type ExtAPIGetStreamResponse struct {
 	Stream interface{} `json:"stream"`
-}
-
-type ExtAPIGetUserResponse struct {
-	ID          int    `json:"_id"`
-	Bio         string `json:"bio"`
-	CreatedAt   string `json:"created_at"`
-	DisplayName string `json:"display_name"`
 }
 
 type Twitchy interface {
@@ -56,9 +41,21 @@ type Twitchy interface {
 
 type TwitchAPI struct {
 	ClientID      string
+	AcceptHeader  string
 	GetStreamURI  string
 	GetChannelURI string
-	GetUserIdURI  string
+	GetUserURI    string
+}
+
+func (t TwitchAPI) NewRequest(method string, uri string, id int) (*http.Request, error) {
+	fullUri := fmt.Sprintf("%s%v?client_id=%s", uri, id, t.ClientID)
+
+	req, err := http.NewRequest(method, fullUri, nil)
+	if err != nil {
+		return nil, err
+	}
+	req.Header.Add("Accept", t.AcceptHeader)
+	return req, nil
 }
 
 func (t TwitchAPI) GetChannel(id int) (GetChannelResponse, error) {
@@ -66,11 +63,8 @@ func (t TwitchAPI) GetChannel(id int) (GetChannelResponse, error) {
 
 	result := GetChannelResponse{ID: id}
 
-	uri := fmt.Sprintf("%s%v?client_id=%s", t.GetChannelURI, id, t.ClientID)
-	fmt.Printf("Sent request to %s", uri)
-
-	req, _ := http.NewRequest("GET", uri, nil)
-	req.Header.Add("Accept", `application/vnd.twitchtv.v5+json"`)
+	req, _ := t.NewRequest("GET", t.GetChannelURI, id)
+	fmt.Printf("Sent %v\n", req)
 
 	resp, _ := client.Do(req)
 
@@ -92,11 +86,8 @@ func (t TwitchAPI) GetStream(id int) (GetStreamResponse, error) {
 	result := GetStreamResponse{ID: id}
 	extResp := ExtAPIGetStreamResponse{}
 
-	uri := fmt.Sprintf("%s%v?client_id=%s", t.GetStreamURI, id, t.ClientID)
-	fmt.Printf("Sent request to %s", uri)
-
-	req, _ := http.NewRequest("GET", uri, nil)
-	req.Header.Add("Accept", `application/vnd.twitchtv.v5+json"`)
+	req, _ := t.NewRequest("GET", t.GetStreamURI, id)
+	fmt.Printf("Sent %v\n", req)
 
 	resp, _ := client.Do(req)
 
@@ -119,11 +110,8 @@ func (t TwitchAPI) GetUser(id int) (GetUserResponse, error) {
 
 	result := GetUserResponse{ID: id}
 
-	uri := fmt.Sprintf("%s%v?client_id=%s", t.GetUserIdURI, id, t.ClientID)
-	fmt.Printf("Sent request to %s", uri)
-
-	req, _ := http.NewRequest("GET", uri, nil)
-	req.Header.Add("Accept", `application/vnd.twitchtv.v5+json"`)
+	req, _ := t.NewRequest("GET", t.GetUserURI, id)
+	fmt.Printf("Sent %v\n", req)
 
 	resp, _ := client.Do(req)
 

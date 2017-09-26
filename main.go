@@ -13,9 +13,10 @@ func main() {
 
 	t := twitch.TwitchAPI{
 		ClientID:      "l3p9c840mspj37hw3845gnfu0pg2ar",
+		AcceptHeader:  `application/vnd.twitchtv.v5+json`,
 		GetChannelURI: "https://api.twitch.tv/kraken/channels/",
 		GetStreamURI:  "https://api.twitch.tv/kraken/streams/",
-		GetUserIdURI:  "https://api.twitch.tv/kraken/users/",
+		GetUserURI:    "https://api.twitch.tv/kraken/users/",
 	}
 
 	// Configure routes
