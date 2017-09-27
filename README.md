@@ -59,6 +59,7 @@ This will get you channel info for user 98955702, aka "theDemodcracy".
 ## API
 
 Each endpoint uses an integer `id` query parameter. If you can't parse it, you'll receive a `400 Bad Request`.
+If Twitch API itself gives an error, the API will return a 500.
 
 #### Get Channel
 
