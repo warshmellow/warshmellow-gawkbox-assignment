@@ -56,7 +56,13 @@ func handleGetChannel(t twitch.Twitchy) http.HandlerFunc {
 
 		resp, err := t.GetChannel(id)
 		if err != nil {
-			errStatusCode, _ := strconv.Atoi(err.Error())
+			errStatusCode, statusCodeErr := strconv.Atoi(err.Error())
+
+			if statusCodeErr != nil {
+				http.Error(w, err.Error(), http.StatusInternalServerError)
+				return
+			}
+
 			http.Error(w, err.Error(), errStatusCode)
 			return
 		}
@@ -81,7 +87,13 @@ func handleGetStream(t twitch.Twitchy) http.HandlerFunc {
 
 		resp, err := t.GetStream(id)
 		if err != nil {
-			errStatusCode, _ := strconv.Atoi(err.Error())
+			errStatusCode, statusCodeErr := strconv.Atoi(err.Error())
+
+			if statusCodeErr != nil {
+				http.Error(w, err.Error(), http.StatusInternalServerError)
+				return
+			}
+
 			http.Error(w, err.Error(), errStatusCode)
 			return
 		}
@@ -105,7 +117,13 @@ func handleGetUser(t twitch.Twitchy) http.HandlerFunc {
 
 		resp, err := t.GetUser(id)
 		if err != nil {
-			errStatusCode, _ := strconv.Atoi(err.Error())
+			errStatusCode, statusCodeErr := strconv.Atoi(err.Error())
+
+			if statusCodeErr != nil {
+				http.Error(w, err.Error(), http.StatusInternalServerError)
+				return
+			}
+
 			http.Error(w, err.Error(), errStatusCode)
 			return
 		}

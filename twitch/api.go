@@ -95,7 +95,10 @@ func (t TwitchAPI) GetChannel(id int) (GetChannelResponse, error) {
 	req, _ := t.NewRequest("GET", t.GetChannelURI, id)
 	fmt.Printf("Sent %v\n", req)
 
-	resp, _ := client.Do(req)
+	resp, err := client.Do(req)
+	if err != nil {
+		return result, err
+	}
 
 	if resp.StatusCode == http.StatusOK {
 
@@ -118,7 +121,10 @@ func (t TwitchAPI) GetStream(id int) (GetStreamResponse, error) {
 	req, _ := t.NewRequest("GET", t.GetStreamURI, id)
 	fmt.Printf("Sent %v\n", req)
 
-	resp, _ := client.Do(req)
+	resp, err := client.Do(req)
+	if err != nil {
+		return result, err
+	}
 
 	if resp.StatusCode == http.StatusOK {
 
@@ -142,7 +148,10 @@ func (t TwitchAPI) GetUser(id int) (GetUserResponse, error) {
 	req, _ := t.NewRequest("GET", t.GetUserURI, id)
 	fmt.Printf("Sent %v\n", req)
 
-	resp, _ := client.Do(req)
+	resp, err := client.Do(req)
+	if err != nil {
+		return result, err
+	}
 
 	if resp.StatusCode == http.StatusOK {
 
