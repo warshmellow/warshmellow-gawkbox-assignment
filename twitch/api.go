@@ -92,7 +92,10 @@ func (t TwitchAPI) GetChannel(id int) (GetChannelResponse, error) {
 
 	result := GetChannelResponse{ID: id}
 
-	req, _ := t.NewRequest("GET", t.GetChannelURI, id)
+	req, err := t.NewRequest("GET", t.GetChannelURI, id)
+	if err != nil {
+		return result, err
+	}
 	fmt.Printf("Sent %v\n", req)
 
 	resp, err := client.Do(req)
@@ -118,7 +121,10 @@ func (t TwitchAPI) GetStream(id int) (GetStreamResponse, error) {
 	result := GetStreamResponse{ID: id}
 	extResp := ExtAPIGetStreamResponse{}
 
-	req, _ := t.NewRequest("GET", t.GetStreamURI, id)
+	req, err := t.NewRequest("GET", t.GetStreamURI, id)
+	if err != nil {
+		return result, err
+	}
 	fmt.Printf("Sent %v\n", req)
 
 	resp, err := client.Do(req)
@@ -145,7 +151,10 @@ func (t TwitchAPI) GetUser(id int) (GetUserResponse, error) {
 
 	result := GetUserResponse{ID: id}
 
-	req, _ := t.NewRequest("GET", t.GetUserURI, id)
+	req, err := t.NewRequest("GET", t.GetUserURI, id)
+	if err != nil {
+		return result, err
+	}
 	fmt.Printf("Sent %v\n", req)
 
 	resp, err := client.Do(req)
